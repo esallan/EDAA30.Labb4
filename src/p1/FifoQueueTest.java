@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import p1.FifoQueue.Node;
+
 class FifoQueueTest<E> {
 
 	@Test
@@ -29,7 +31,7 @@ class FifoQueueTest<E> {
 	@Test
 	void peekAndRetrievesTheHeadOfQueue() {
 		var queue = new FifoQueue<>();
-		queue.add("test string");
+		queue.offer("test string");
 		assertEquals("test string", queue.peek());
 	}
 
@@ -54,29 +56,41 @@ class FifoQueueTest<E> {
 	@Test
 	void pollReturnsFirstObject() {
 		var queue = new FifoQueue<>();
-		queue.add("testString");
+		queue.offer("testString");
 		assertEquals("testString", queue.poll());
 	}
 
 	@Test
 	void pollDeletesFirstObject() {
 		var queue = new FifoQueue<>();
-		queue.add("test String");
+		queue.offer("test String");
+		queue.poll();
+		assertEquals(null, queue.poll());
+	}
+
+	
+
+	@Test
+	void nodeTestThatNextIsNull() {
+		FifoQueue.Node<String> node = new FifoQueue.Node<String>("String", null);
+		assertNull(node.next);
+	}
+
+	@Test
+	void testIfCompletlyEmpty() {
+		var queue = new FifoQueue<>();
+		queue.offer("test1");
+		queue.offer("test2");
+		queue.poll();
 		queue.poll();
 		assertEquals(null, queue.poll());
 	}
 	
 	@Test
-	void iteratorRetursAIteratorThatHasANext() {
-		var queue = new FifoQueue<>();
-		queue.add("1");
-		queue.add("2");
-		assertTrue(queue.iterator().hasNext());
-	}
-	
-	@Test
-	void nodeTestThatNextIsNull() {
-		FifoQueue.Node<String> node = new FifoQueue.Node<String>("String", null);
-		assertNull(node.next);
+	void testFirstInFirstOut() {
+		var queue = new FifoQueue<String>();
+		queue.offer("test1");
+		queue.offer("test2");
+		assertEquals("test1test2", queue.poll()+queue.poll());
 	}
 }
